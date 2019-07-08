@@ -1,0 +1,29 @@
+<div class="home-wrap">
+  <div class="img-box">
+    <img class="img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==" alt="logo">
+  </div>
+  <!-- 自定义选择 -->
+  <div class="input-box">
+    <input class="input" type="text" [(ngModel)]="base">
+    <div class="btn" (click)="baseFlag = true">自定义选择</div>
+  </div>
+  <app-linkage-base (cancel)="baseFlag = false" (confirm)="handleConfirm($event, 'base')" [isShow]="baseFlag"></app-linkage-base>
+  <!-- 时间选择 -->
+  <div class="input-box">
+    <input class="input" type="text" [(ngModel)]="time">
+    <div class="btn" (click)="timeFlag = true">时间选择</div>
+  </div>
+  <app-linkage-time cancelText="cancel" confirmText="confirm" (cancel)="timeFlag = false" (confirm)="handleConfirm($event, 'time', ':')" [isShow]="timeFlag"></app-linkage-time>
+  <!-- 日期选择 -->
+  <div class="input-box">
+    <input class="input" type="text" [(ngModel)]="date">
+    <div class="btn" (click)="dateFlag = true">日期选择</div>
+  </div>
+  <app-linkage-date (cancel)="dateFlag = false" (confirm)="handleConfirm($event, 'date')" [isShow]="dateFlag"></app-linkage-date>
+  <!-- 地址选择 -->
+  <div class="input-box">
+    <input class="input" type="text" [(ngModel)]="addr">
+    <div class="btn" (click)="addrFlag = true">地址选择</div>
+  </div>
+  <app-linkage-addr [initVal]="['海南省', '三亚市', '天涯区']" (cancel)="addrFlag = false" (confirm)="handleConfirm($event, 'addr')" [isShow]="addrFlag"></app-linkage-addr>
+</div>

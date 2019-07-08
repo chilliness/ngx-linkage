@@ -1,0 +1,94 @@
+// $height 控制滚动区高度，建议为3的整数倍
+// $fontSize控制字体大小
+// $linearGradient控制渐变区域
+$height: 150px;
+$fontSize: 14px;
+$linearGradient: linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), #fff);
+
+.linkageBase-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  flex-flow: column;
+  font-size: $fontSize;
+  user-select: none;
+  &.hide {
+    display: none;
+  }
+  .holder-box {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .main-box {
+    background: #fff;
+    .btn-bar {
+      display: flex;
+      justify-content: space-between;
+      .btn {
+        display: flex;
+        align-items: center;
+        height: 46px;
+        padding: 0 15px;
+      }
+    }
+    .list-outer {
+      position: relative;
+      border-top: 1px solid #ccc;
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: $linearGradient;
+      }
+      .list-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-around;
+        height: $height;
+        overflow: hidden;
+        .list-box {
+          &:before,
+          &:after {
+            content: '';
+            display: block;
+            height: $height / 3;
+          }
+          .item-box {
+            height: $height / 3;
+            line-height: $height / 3;
+            text-align: center;
+            padding: 0 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+      .line-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        .line {
+          flex: 1;
+          height: 100%;
+          &:nth-child(n + 2) {
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+          }
+        }
+      }
+    }
+  }
+}

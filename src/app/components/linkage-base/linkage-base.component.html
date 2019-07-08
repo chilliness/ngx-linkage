@@ -1,0 +1,19 @@
+<div class="linkageBase-wrap" [ngClass]="{hide: !isShow}">
+  <div class="holder-box" (click)="handleCancel()"></div>
+  <div class="main-box">
+    <div class="btn-bar">
+      <div class="btn btn-cancel" (click)="handleCancel()">{{cancelText}}</div>
+      <div class="btn btn-submit" (click)="handleConfirm()">{{confirmText}}</div>
+    </div>
+    <div class="list-outer">
+      <div class="list-inner">
+        <div class="list-box" [ngStyle]="{width: 100 / list.length + '%'}" *ngFor="let item of list; index as index; trackBy: handleBy" (touchstart)="handleStart(index, $event)" (touchmove)="handleMove($event)" (touchend)="handleEnd()" (touchcancel)="handleEnd()" #listBox>
+          <div class="item-box" [attr.data-val]="_item.val" *ngFor="let _item of item; _index as index; trackBy: handleBy">{{_item.val}}</div>
+        </div>
+      </div>
+      <div class="line-box">
+        <div class="line" *ngFor="let item of list; index as index; trackBy: handleBy"></div>
+      </div>
+    </div>
+  </div>
+</div>
