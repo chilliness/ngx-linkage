@@ -1,5 +1,11 @@
 ## 多级联动
 
+> 版本
+
+|链接|链接|链接|
+|:------:|:------:|:------:|
+|[vue版](https://github.com/chilliness/vue-linkage)|[angular版](https://github.com/chilliness/ngx-linkage)|[react版](https://github.com/chilliness/react-linkage)|
+
 > 亮点
 
 ``` bash
@@ -44,14 +50,17 @@
 9、由于『显示内容和获取结果』是取子项的val属性，请务必保证『二维数组list每一项的子项为带有val属性的对象』
 ```
 
-## Development server
+## Project setup
+```
+npm install
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Compiles and hot-reloads for development
+```
+npm run start
+```
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Compiles and minifies for production
+```
+npm run build
+```

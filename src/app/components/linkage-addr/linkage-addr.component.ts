@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 import { provList, cityList, areaList } from './js/metadata.js';
 
 @Component({
@@ -6,9 +6,9 @@ import { provList, cityList, areaList } from './js/metadata.js';
   templateUrl: './linkage-addr.component.html',
   styleUrls: ['./linkage-addr.component.scss']
 })
-export class LinkageAddrComponent implements OnInit {
+export class LinkageAddrComponent implements AfterContentInit {
   @Input() initVal = [];
-  @Input() isShow = false;
+  @Input() isShow: boolean;
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
@@ -22,9 +22,7 @@ export class LinkageAddrComponent implements OnInit {
   linkageVal = [];
   lastIndex = '';
 
-  constructor() { }
-
-  ngOnInit() {
+  ngAfterContentInit() {
     this.handleInitPos();
   }
 

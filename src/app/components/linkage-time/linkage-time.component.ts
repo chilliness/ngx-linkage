@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-linkage-time',
   templateUrl: './linkage-time.component.html',
   styleUrls: ['./linkage-time.component.scss']
 })
-export class LinkageTimeComponent implements OnInit {
+export class LinkageTimeComponent {
   @Input() initVal = [];
-  @Input() isShow = false;
+  @Input() isShow: boolean;
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
@@ -20,20 +20,18 @@ export class LinkageTimeComponent implements OnInit {
   list = [];
 
   constructor() {
-    const hourList = Array.from(Array(24).keys(), num => ({
-      val: String(num).padStart(2, '0')
+    const hourList = [...''.padEnd(24)].map((v, i) => ({
+      val: String(i).padStart(2, '0')
     }));
-    const minuteList = Array.from(Array(60).keys(), num => ({
-      val: String(num).padStart(2, '0')
+    const minuteList = [...''.padEnd(60)].map((v, i) => ({
+      val: String(i).padStart(2, '0')
     }));
-    const secondList = Array.from(Array(60).keys(), num => ({
-      val: String(num).padStart(2, '0')
+    const secondList = [...''.padEnd(60)].map((v, i) => ({
+      val: String(i).padStart(2, '0')
     }));
 
     this.list = [hourList, minuteList, secondList];
   }
-
-  ngOnInit() { }
 
   handleCancel(res) {
     this.cancel.emit(res);

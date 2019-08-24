@@ -1,5 +1,5 @@
-import { Component, OnChanges, OnInit, AfterViewInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
-import { css, MTween } from './js/m.Tween.js';
+import { Component, OnChanges, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { css, MTween } from './js/MTween.js';
 const touch: any = { lastTime: 0, interval: 300 };
 
 @Component({
@@ -7,11 +7,11 @@ const touch: any = { lastTime: 0, interval: 300 };
   templateUrl: './linkage-base.component.html',
   styleUrls: ['./linkage-base.component.scss']
 })
-export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
+export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() list = [[{ val: '苹果' }, { val: '香蕉' }, { val: '西瓜' }, { val: '樱桃' }]];
   @Input() initVal = [];
   @Input() linkageVal = [];
-  @Input() isShow = false;
+  @Input() isShow: boolean;
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
@@ -20,11 +20,9 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
   @Output() cancel = new EventEmitter();
   @Output() confirm = new EventEmitter();
 
-  @ViewChildren('listBox') listBoxRef: any;
+  @ViewChild('listInner', { static: false }) listInnerRef: any;
 
   [x: string]: any;
-
-  constructor() { }
 
   ngOnChanges(changes) {
     if (changes.isShow !== undefined && !changes.isShow.firstChange) {
@@ -33,14 +31,16 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     if (changes.linkageVal !== undefined && !changes.linkageVal.firstChange) {
-      this.$nextTick(this.handleCssPos);
+      this.handleCssPos();
     }
   }
 
-  ngOnInit() { }
-
   ngAfterViewInit() {
-    this.$nextTick(this.handleInitPos);
+    setTimeout(() => this.handleInitPos(), 60);
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('touchmove', this.handlePrevent);
   }
 
   handleInitPos() {
@@ -48,25 +48,18 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
       return;
     }
 
-    const aPos = [];
-    this.list.map((item, index) => {
-      aPos.push(item.findIndex(item => item.val === this.initVal[index]));
-    });
+    const aPos = this.list.map((item, index) => item.findIndex(obj => obj.val === this.initVal[index]));
 
     if (aPos.includes(-1)) {
-      return console.log(this.initVal, '初始化失败，请核对数据有效性');
+      throw Error('初始化失败，请核对数据有效性');
     }
 
-    const timerOut = setTimeout(() => {
-      clearTimeout(timerOut);
-      this.listBoxRef._results.forEach((item, index) => {
-        item = item.nativeElement;
-        const val = -css(item.children[0], 'height') * aPos[index];
-        css(item, 'translateY', val);
-      });
+    [...this.listInnerRef.nativeElement.children].forEach((item, index) => {
+      const val = -css(item.children[0], 'height') * aPos[index];
+      css(item, 'translateY', val);
+    });
 
-      this.init.emit({ index: aPos, _: 'index-初始化索引' });
-    }, 60);
+    this.init.emit({ index: aPos, _: 'index-初始化索引' });
   }
 
   handleCssPos() {
@@ -74,13 +67,9 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
       return;
     }
 
-    const aPos = [];
-    this.list.map((item, index) => {
-      aPos.push(item.findIndex(item => item.val === this.linkageVal[index]));
-    });
+    const aPos = this.list.map((item, index) => item.findIndex(obj => obj.val === this.linkageVal[index]));
 
-    this.listBoxRef._results.forEach((item, index) => {
-      item = item.nativeElement;
+    [...this.listInnerRef.nativeElement.children].forEach((item, index) => {
       const val = aPos[index];
       if (val !== -1) {
         css(item, 'translateY', -css(item.children[0], 'height') * val);
@@ -97,7 +86,7 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
     touch.init = true;
     touch.lastTime = now;
     touch.elIndex = elIndex;
-    touch.el = this.listBoxRef._results[elIndex].nativeElement;
+    touch.el = this.listInnerRef.nativeElement.children[elIndex];
     touch.diffY = 0;
     touch.startY = e.changedTouches[0].pageY;
     touch.oldVal = css(touch.el, 'translateY');
@@ -157,13 +146,10 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
       _: 'bool-是否正常,index-最终索引,meta-最终数据,val-最终结果'
     };
 
-    this.listBoxRef._results.forEach((item, index) => {
-      item = item.nativeElement;
+    [...this.listInnerRef.nativeElement.children].forEach((item, index) => {
       const msg = '警告:心急吃不了热豆腐';
       const children = item.children;
-      const nowIndex = Math.abs(
-        css(item, 'translateY') / css(children[0], 'height')
-      );
+      const nowIndex = Math.abs(css(item, 'translateY') / css(children[0], 'height'));
       if (children[nowIndex]) {
         obj.index.push(nowIndex);
         obj.meta.push(this.list[index][nowIndex]);
@@ -178,8 +164,7 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
 
     if (elIndex !== -1) {
       obj.which = elIndex;
-      obj._ =
-        'bool-是否正常,index-联动前索引,meta-联动前数据,val-联动前结果,which-联动前操作列索引';
+      obj._ = 'bool-是否正常,index-联动前索引,meta-联动前数据,val-联动前结果,which-联动前操作列索引';
     }
     return obj;
   }
@@ -198,12 +183,5 @@ export class LinkageBaseComponent implements OnChanges, OnInit, AfterViewInit {
 
   handleBy(index) {
     return index;
-  }
-
-  $nextTick(callback) {
-    const timerOut = setTimeout(() => {
-      clearTimeout(timerOut);
-      callback && callback.call(this);
-    }, 60);
   }
 }

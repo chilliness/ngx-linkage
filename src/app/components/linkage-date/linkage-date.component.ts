@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, AfterContentInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-linkage-date',
   templateUrl: './linkage-date.component.html',
   styleUrls: ['./linkage-date.component.scss']
 })
-export class LinkageDateComponent implements OnInit {
+export class LinkageDateComponent implements AfterContentInit {
   @Input() initVal = [];
-  @Input() isShow = false;
+  @Input() isShow: boolean;
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
@@ -29,17 +29,17 @@ export class LinkageDateComponent implements OnInit {
       yearList.push({ val: String(+year + i) });
     }
 
-    const monthList = Array.from(Array(12).keys(), num => ({
-      val: String(num + 1).padStart(2, '0')
+    const monthList = [...''.padEnd(12)].map((v, i) => ({
+      val: String(i + 1).padStart(2, '0')
     }));
-    const dateList = Array.from(Array(31).keys(), num => ({
-      val: String(num + 1).padStart(2, '0')
+    const dateList = [...''.padEnd(31)].map((v, i) => ({
+      val: String(i + 1).padStart(2, '0')
     }));
 
     this.list = [yearList, monthList, dateList];
   }
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.handleInitPos();
   }
 
@@ -65,8 +65,8 @@ export class LinkageDateComponent implements OnInit {
     }
 
     const days = new Date(year, month, 0).getDate();
-    const dateList = Array.from(Array(days).keys(), num => ({
-      val: String(num + 1).padStart(2, '0')
+    const dateList = [...''.padEnd(days)].map((v, i) => ({
+      val: String(i + 1).padStart(2, '0')
     }));
     this.list = [this.list[0], this.list[1], dateList];
   }
@@ -90,8 +90,8 @@ export class LinkageDateComponent implements OnInit {
 
     if (which !== 2) {
       const days = new Date(val[0], val[1], 0).getDate();
-      const dateList = Array.from(Array(days).keys(), num => ({
-        val: String(num + 1).padStart(2, '0')
+      const dateList = [...''.padEnd(days)].map((v, i) => ({
+        val: String(i + 1).padStart(2, '0')
       }));
       this.list = [this.list[0], this.list[1], dateList];
 
