@@ -12,10 +12,10 @@ export class LinkageAddrComponent implements AfterContentInit {
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
-  @Output() init = new EventEmitter();
-  @Output() over = new EventEmitter();
-  @Output() cancel = new EventEmitter();
-  @Output() confirm = new EventEmitter();
+  @Output() emitInit = new EventEmitter();
+  @Output() emitOver = new EventEmitter();
+  @Output() emitCancel = new EventEmitter();
+  @Output() emitConfirm = new EventEmitter();
 
   [x: string]: any;
   list = [provList, cityList, areaList];
@@ -51,17 +51,17 @@ export class LinkageAddrComponent implements AfterContentInit {
   }
 
   handleCancel(res) {
-    this.cancel.emit(res);
+    this.emitCancel.emit(res);
   }
 
   handleConfirm(res) {
-    this.confirm.emit(res);
+    this.emitConfirm.emit(res);
   }
 
   handleOver(res) {
     const { which, meta, index, bool } = res;
     const str = String(index);
-    this.over.emit(res);
+    this.emitOver.emit(res);
 
     // 这步判断是必须的，防止获取不到数据报错
     if (!bool) {
@@ -93,6 +93,6 @@ export class LinkageAddrComponent implements AfterContentInit {
 
   handleInit(res) {
     this.lastIndex = String(res.index);
-    this.init.emit(res);
+    this.emitInit.emit(res);
   }
 }

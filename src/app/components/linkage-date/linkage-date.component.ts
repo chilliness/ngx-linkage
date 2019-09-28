@@ -11,10 +11,10 @@ export class LinkageDateComponent implements AfterContentInit {
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
-  @Output() init = new EventEmitter();
-  @Output() over = new EventEmitter();
-  @Output() cancel = new EventEmitter();
-  @Output() confirm = new EventEmitter();
+  @Output() emitInit = new EventEmitter();
+  @Output() emitOver = new EventEmitter();
+  @Output() emitCancel = new EventEmitter();
+  @Output() emitConfirm = new EventEmitter();
 
   [x: string]: any;
   list = [];
@@ -29,12 +29,16 @@ export class LinkageDateComponent implements AfterContentInit {
       yearList.push({ val: String(+year + i) });
     }
 
-    const monthList = [...''.padEnd(12)].map((v, i) => ({
-      val: String(i + 1).padStart(2, '0')
-    }));
-    const dateList = [...''.padEnd(31)].map((v, i) => ({
-      val: String(i + 1).padStart(2, '0')
-    }));
+    const monthList = Array(12)
+      .fill('')
+      .map((v, i) => ({
+        val: String(i + 1).padStart(2, '0')
+      }));
+    const dateList = Array(31)
+      .fill('')
+      .map((v, i) => ({
+        val: String(i + 1).padStart(2, '0')
+      }));
 
     this.list = [yearList, monthList, dateList];
   }
@@ -65,23 +69,25 @@ export class LinkageDateComponent implements AfterContentInit {
     }
 
     const days = new Date(year, month, 0).getDate();
-    const dateList = [...''.padEnd(days)].map((v, i) => ({
-      val: String(i + 1).padStart(2, '0')
-    }));
+    const dateList = Array(days)
+      .fill('')
+      .map((v, i) => ({
+        val: String(i + 1).padStart(2, '0')
+      }));
     this.list = [this.list[0], this.list[1], dateList];
   }
 
   handleCancel(res) {
-    this.cancel.emit(res);
+    this.emitCancel.emit(res);
   }
 
   handleConfirm(res) {
-    this.confirm.emit(res);
+    this.emitConfirm.emit(res);
   }
 
   handleOver(res) {
     const { which, val, bool } = res;
-    this.over.emit(res);
+    this.emitOver.emit(res);
 
     // 这步判断是必须的，防止获取不到数据报错
     if (!bool) {
@@ -90,9 +96,11 @@ export class LinkageDateComponent implements AfterContentInit {
 
     if (which !== 2) {
       const days = new Date(val[0], val[1], 0).getDate();
-      const dateList = [...''.padEnd(days)].map((v, i) => ({
-        val: String(i + 1).padStart(2, '0')
-      }));
+      const dateList = Array(days)
+        .fill('')
+        .map((v, i) => ({
+          val: String(i + 1).padStart(2, '0')
+        }));
       this.list = [this.list[0], this.list[1], dateList];
 
       if (days < val[2]) {
@@ -102,6 +110,6 @@ export class LinkageDateComponent implements AfterContentInit {
   }
 
   handleInit(res) {
-    this.init.emit(res);
+    this.emitInit.emit(res);
   }
 }

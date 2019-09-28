@@ -1,4 +1,4 @@
-import { Component, OnChanges, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnChanges, AfterContentInit, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { css, MTween } from './js/MTween.js';
 const touch: any = { lastTime: 0, interval: 300 };
 
@@ -7,7 +7,7 @@ const touch: any = { lastTime: 0, interval: 300 };
   templateUrl: './linkage-base.component.html',
   styleUrls: ['./linkage-base.component.scss']
 })
-export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class LinkageBaseComponent implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy {
   @Input() list = [[{ val: '苹果' }, { val: '香蕉' }, { val: '西瓜' }, { val: '樱桃' }]];
   @Input() initVal = [];
   @Input() linkageVal = [];
@@ -15,12 +15,12 @@ export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy
   @Input() cancelText = '取消';
   @Input() confirmText = '确定';
 
-  @Output() init = new EventEmitter();
-  @Output() over = new EventEmitter();
-  @Output() cancel = new EventEmitter();
-  @Output() confirm = new EventEmitter();
+  @Output() emitInit = new EventEmitter();
+  @Output() emitOver = new EventEmitter();
+  @Output() emitCancel = new EventEmitter();
+  @Output() emitConfirm = new EventEmitter();
 
-  @ViewChild('listInner', { static: false }) listInnerRef: any;
+  @ViewChild('listInnerRef', { static: false }) listInnerRef: any;
 
   [x: string]: any;
 
@@ -32,6 +32,12 @@ export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy
 
     if (changes.linkageVal !== undefined && !changes.linkageVal.firstChange) {
       this.handleCssPos();
+    }
+  }
+
+  ngAfterContentInit() {
+    if (typeof this.isShow !== 'boolean') {
+      throw Error('Type check failed for prop "isShow", expected Boolean.');
     }
   }
 
@@ -59,7 +65,7 @@ export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy
       css(item, 'translateY', val);
     });
 
-    this.init.emit({ index: aPos, _: 'index-初始化索引' });
+    this.emitInit.emit({ index: aPos, _: 'index-初始化索引' });
   }
 
   handleCssPos() {
@@ -133,7 +139,7 @@ export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy
       target: { translateY: targetY },
       type: 'easeOut',
       time: 100,
-      callBack: () => this.over.emit(this.handleResult(touch.elIndex))
+      callBack: () => this.emitOver.emit(this.handleResult(touch.elIndex))
     });
   }
 
@@ -170,11 +176,11 @@ export class LinkageBaseComponent implements OnChanges, AfterViewInit, OnDestroy
   }
 
   handleConfirm() {
-    this.confirm.emit(this.handleResult());
+    this.emitConfirm.emit(this.handleResult());
   }
 
   handleCancel() {
-    this.cancel.emit(this.handleResult());
+    this.emitCancel.emit(this.handleResult());
   }
 
   handlePrevent(e) {

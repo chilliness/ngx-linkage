@@ -6,7 +6,7 @@
       <div class="btn btn-submit" (click)="handleConfirm()">{{confirmText}}</div>
     </div>
     <div class="list-outer">
-      <div class="list-inner" #listInner>
+      <div class="list-inner" #listInnerRef>
         <div class="list-box" [ngStyle]="{width: 100 / list.length + '%'}" *ngFor="let item of list; index as index; trackBy: handleBy" (touchstart)="handleStart(index, $event)" (touchmove)="handleMove($event)" (touchend)="handleEnd()" (touchcancel)="handleEnd()">
           <div class="item-box" [attr.data-val]="_item.val" *ngFor="let _item of item; _index as index; trackBy: handleBy">{{_item.val}}</div>
         </div>
